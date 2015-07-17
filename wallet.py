@@ -9,6 +9,8 @@ class wallet(object):
 
 	def ChangeM(self,m):
 		self.money += m
+		if self.money >= InitMoney*1.2:
+			self.SaveMoney()
 
 	def SaveMoney(self):
 		self.bank += self.money - InitMoney

@@ -9,84 +9,59 @@ from seller import *
 class player(object):
     def __init__(self):
     	self.multiple = 1
-    	self.chess = EVEN
+    	self.chess = [EVEN]
     	self.stack = []
     	self.wallet = wallet()
-    	self.cnt = 0
-        self.conter = Seller()
+        self.counter = Seller()
+        self.curCost = 0
         pass
 
-    def SetResult(self,judge, number):
-    	if judge :
-    		self.multiple = 1.0
-    	else:
-    		self.multiple *= 3
-    		if self.multiple > 1000:
-    			self.multiple = 1.0
-    		self.stack.append( int(number[-1]) % 2)
-    		if len(self.stack) == self.cnt:
-    			self.ChangeCnt()
-    			self.chess = (self.chess + 1) % 2
-    			self.stack = []
+    def SetResult(self,judge, number,cost):
+        self.stack.append(int(number[-1]))
+        if len(self.stack) > 10:
+            self.stack.pop(0)
 
+        self.chess = self.MaxOccur(self.stack)
+        self.wallet.ChangeM(cost[1] - cost[0])
+        self.Multiple(judge, 0.4)
 
         pass
 
     def Choice(self):
+        self.curCost += self.counter.Cost(self.multiple)
      	return (self.chess, self.multiple)
         pass
 
-    def ChangeCnt(self):
-    	if self.cnt % 2 :
-    		self.cnt = 1
-    	else:
-    		self.cnt = 2
-
     def Resume(self):
         self.wallet.SaveMoney()
-        self.chess = EVEN
-        self.stack = []
         self.multiple = 1
-        self.cnt = 0
+        self.curCost = 0
 
-
-class player2(player):
-    def __init__(self):
-        super(player2,self).__init__()
-        self.chess = 0
-        self.cnt = 0
-        self.stack = []
-        self.cost = 0
-
-    def SetResult(self,judge,number):
-        self.stack.append(int(number[-1]))
-        if len(self.stack) > 15:
-            self.stack.pop(0)
-
-        listNum = self.stack[:]
+    def MaxOccur(self,List):
+        ret = None
+        listNum = List[:]
         listNum.sort()
         i = 0
-        maxCnt = 0
+        maxCnt = 10
         while(i < len(listNum)):
             cnt = listNum.count(listNum[i])
-            if maxCnt < cnt:
+            if maxCnt > cnt:
                 maxCnt = cnt
-                self.chess = listNum[i]
+                ret = [listNum[i]]
             i += cnt
+        return ret
 
-
-
-        if judge :
+    def Multiple(self, result, pre):
+        if result :
             self.multiple = 1.0
-            self.cost = 0
+            self.curCost = 0
         else:
-            while self.multiple * 1.7 - self.cost <= 0.9*self.multiple:
+            while self.counter.Pay(self.multiple) - self.counter.Cost(self.multiple) - self.curCost <= pre *self.multiple:
                 self.multiple += 1
 
-        self.cost += self.multiple * 0.2
-
-        if self.wallet.money - self.multiple * 0.2 < 0:
+        if self.wallet.money - self.counter.Cost(self.multiple) < 0:
             self.Resume()
+
 
 
 

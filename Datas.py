@@ -1,4 +1,3 @@
-ni
 
 from pprint import *
 
@@ -44,5 +43,6 @@ if __name__ == '__main__':
 	d = DataMgr()
 	d.SetDataFile('datas.txt')
 
-	for one in d.GetValue():
+	for one in d.GetData():
 		print one
+		raw_input()
