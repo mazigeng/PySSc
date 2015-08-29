@@ -1,6 +1,6 @@
 
 
-InitMoney = 50.00
+InitMoney = 100.00
 
 class wallet(object):
 	def __init__(self):
@@ -9,8 +9,10 @@ class wallet(object):
 
 	def ChangeM(self,m):
 		self.money += m
+		'''
 		if self.money >= InitMoney*1.2:
 			self.SaveMoney()
+		'''
 
 	def SaveMoney(self):
 		self.bank += self.money - InitMoney

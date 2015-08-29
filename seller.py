@@ -2,8 +2,8 @@
 
 class Seller(object):
 	def __init__(self):
-		self.pay = 1.7
-		self.cost = 0.2
+		self.pay = 0.68
+		self.cost = 0.4
 		pass
 
 	def Count(self, result, multiple):
